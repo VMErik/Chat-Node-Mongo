@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 // Nos permitira trabajar con rutas
 const router = express.Router();
 
+// Importamos nuestro modulo de respuestas
+const response = require('./network/response');
+
 // Incializamos nuestro express
 var app = express();
 // Añadimos router a nuestro servidor nuestras librerias
@@ -15,22 +18,24 @@ app.use(router);
 router.get('/message', function(req, res) {
     console.log(req.headers); // Incluye las cabeceras
     res.header({ "custom-header": "Nuestro valor personalizado" }); // Podemos enviar headers dentro de las respuestas
-    res.send('Aqui esta tu lista de mensajes');
+    // Llamamos a nuestro modulo
+    response.success(req, res, 'Lista de mensajes');
 });
 
 // Indicamos nuestra ruta para el metodo post
 router.post('/message', function(req, res) {
-    // Podemos enviar estados (201)
-    res.status(201).send({
-        error: '',
-        body: 'Creado correctamente'
-    });
+    // Simulamos un error
+    if (req.query.error == "ok") {
+        response.error(req, res, "Este es un error simulado", 400);
+    }
+    response.success(req, res, "Creado correctamente");
 });
 
-router.post('/message', function(req, res) {
+router.delete('/message', function(req, res) {
     console.log(req.body); // accedemos a los parametros del body
     console.log(req.query) // accedemos a los parametros del query
-    res.send('Se ha eliminado tu mensaje ' + req.body.text);
+        // res.send('Se ha eliminado tu mensaje ' + req.body.text);
+    response.success(req, res, "Se ha eliminado tu mensaje " + req.body.text)
 });
 
 app.listen('3000');
