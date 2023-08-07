@@ -8,8 +8,9 @@ exports.success = function(req, res, message, status = 200) {
     });
 }
 
-
-exports.error = function(req, res, error, status = 500) {
+// El parametro details, lo utilizamos para poder imprimir en los logs, detalles de los errores
+exports.error = function(req, res, error, status = 500, details) {
+    console.error(details);
     // Definimos nuestra respuesta personalizada
     res.status(status).send({
         error: error,

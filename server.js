@@ -14,6 +14,10 @@ var app = express();
 app.use(bodyParser.json()); // Indicamos que trabajeremos con json
 app.use(router);
 
+// Asi servimos archivos estaticos
+// La ruta en la que queremos que se visualice, y que carpeta queremos servir
+app.use("/app", express.static('public'));
+
 // Indicamos nuestra ruta para el metodo get
 router.get('/message', function(req, res) {
     console.log(req.headers); // Incluye las cabeceras
@@ -26,9 +30,12 @@ router.get('/message', function(req, res) {
 router.post('/message', function(req, res) {
     // Simulamos un error
     if (req.query.error == "ok") {
-        response.error(req, res, "Este es un error simulado", 400);
+        // Mandamos a llamar a nuestra respuesta coherente de errores
+        // Mandaos el status, y mandamos en el parametro details la informacion del error
+        response.error(req, res, "Error inesperado", 500, "Es solo una simulacion de los errores");
+    } else {
+        response.success(req, res, "Creado correctamente");
     }
-    response.success(req, res, "Creado correctamente");
 });
 
 router.delete('/message', function(req, res) {
