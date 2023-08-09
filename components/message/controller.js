@@ -31,8 +31,22 @@ function getMessages() {
     });
 }
 
+
+function updateMessage(id, message) {
+    return new Promise(async(resolve, reject) => {
+        if (!id || !message) {
+            reject('Invalid data');
+            return false;
+        }
+        const result = await store.updateText(id, message);
+        resolve(result);
+    });
+}
+
+
 // Exportamos todas nuestras funciones
 module.exports = {
     addMessage,
-    getMessages
+    getMessages,
+    updateMessage
 };

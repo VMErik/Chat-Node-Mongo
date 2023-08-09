@@ -32,6 +32,20 @@ router.post('/', function(req, res) {
         })
 });
 
+// Manejamos los parametros
+// Con dos puntos hacemos referencia
+router.patch('/:id', function(req, res) {
+    console.log(req.params.id);
+    controller.updateMessage(req.params.id, req.body.text)
+        .then((data) => {
+            response.success(req, res, data, 200);
+        })
+        .catch((error) => {
+            response.error(req, res, 'Error interno', 500, error);
+        })
+});
+
+
 router.delete('/', function(req, res) {
     console.log(req.body); // accedemos a los parametros del body
     console.log(req.query) // accedemos a los parametros del query
