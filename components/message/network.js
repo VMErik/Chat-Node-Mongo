@@ -11,7 +11,11 @@ const router = express.Router();
 
 // Indicamos nuestra ruta para el metodo get
 router.get('/', function(req, res) {
-    controller.getMessages()
+
+    // Obtenemos el usuario de los que queremos el mensaje
+    const filterMessages = req.query.user || null;
+
+    controller.getMessages(filterMessages)
         .then((messageList) => {
             response.success(req, res, messageList, 200);
         })
@@ -42,15 +46,19 @@ router.patch('/:id', function(req, res) {
         })
         .catch((error) => {
             response.error(req, res, 'Error interno', 500, error);
-        })
+        });
 });
 
 
-router.delete('/', function(req, res) {
-    console.log(req.body); // accedemos a los parametros del body
-    console.log(req.query) // accedemos a los parametros del query
-        // res.send('Se ha eliminado tu mensaje ' + req.body.text);
-    response.success(req, res, "Se ha eliminado tu mensaje " + req.body.text)
+router.delete('/:id', function(req, res) {
+    const id = req.params.id;
+    controller.deleteMessage(id)
+        .then((data) => {
+            response.success(req, res, `Message ${id} eliminado`, 200);
+        })
+        .catch((error) => {
+            response.error(req, res, 'Error interno', 500, error);
+        });
 });
 
 

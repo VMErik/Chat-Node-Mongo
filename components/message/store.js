@@ -21,19 +21,33 @@ function addMessage(message) {
     myMessage.save();
 }
 
-async function getMessages() {
-    // return list;
+async function getMessages(filterUser) {
+    let filter = {};
+    if (filterUser !== null) {
+        // Con nuestra expresion regular hacemos que sea indiferente minusculas y mayusculas
+        filter = { user: new RegExp(filterUser, "i") };
+    }
     // Retornemos nuestros mensajes desde el modelo
-    return await Model.find();
+    return await Model.find(filter);
 }
 
 async function updateMessage(id, message) {
-    // Primero buscamos
-    const foundMessage = await Model.findOne({ _id: id });
-    // Actualizamos
-    foundMessage.message = message;
-    const newMessage = await foundMessage.save();
-    return newMessage;
+    // // Primero buscamos
+    // const foundMessage = await Model.findOne({ _id: id });
+    // // Actualizamos
+    // foundMessage.message = message;
+    // const newMessage = await foundMessage.save();
+    // return newMessage;
+
+    // Lo podemos reemplazar solo en una funcion
+    const updatedMessage = await Model.findOneAndUpdate({ _id: id }, { message }, { new: true });
+    return updatedMessage;
+}
+
+async function removeMessage(id) {
+    // Eliminamos nuestro archivo
+    const removedMessage = await Model.deleteOne({ _id: id });
+    return removedMessage;
 }
 
 
@@ -41,5 +55,6 @@ module.exports = {
     // Le colocamos un nombre y hacemos referencia a la funcion
     add: addMessage,
     list: getMessages,
-    updateText: updateMessage
+    updateText: updateMessage,
+    removeText: removeMessage
 }
