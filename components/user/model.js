@@ -6,21 +6,12 @@ const Schema = mongoose.Schema;
 
 // Declaramos nuestro esquema de Mongoose, propiedades y tipos
 const mySchema = new Schema({
-    // Referenciamos a nuestro otro modelo
-    user: {
-        type: Schema.ObjectId,
-        ref: 'User'
-    },
-    message: {
-        type: String,
-        required: true
-    },
-    date: Date
+    name: String
 });
 
 
 // Creamos nuestro modelo que va a tener el esquema declarado
 // Como le vamos a llamar y que estructura va a tener
-const model = mongoose.model('Message', mySchema);
+const model = mongoose.model('User', mySchema);
 // Exportamos nuestro modelo
 module.exports = model;

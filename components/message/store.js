@@ -1,18 +1,10 @@
 // Se encargara de la interaccion con la base de datos
-// Importamos mongoose
-const db = require('mongoose')
+
 
 // Hacemos una instancia de nuestro modelo
 const Model = require('./model')
-    // Hacemos uso de nuestras promesas de JavaScript
-db.Promise = global.Promise;
-// Conexion : mongodb+srv://mikkonenvm:erik12345@cluster0.cpoovak.mongodb.net/
-db.connect('mongodb+srv://mikkonenvm:erik12345@cluster0.cpoovak.mongodb.net/chat?retryWrites=true&w=majority', {
-    useNewUrlParser: true,
 
-});
 
-console.log('[db] Conectada con exito')
 
 function addMessage(message) {
     console.log("Añadimos desde el store");
@@ -22,13 +14,30 @@ function addMessage(message) {
 }
 
 async function getMessages(filterUser) {
-    let filter = {};
-    if (filterUser !== null) {
-        // Con nuestra expresion regular hacemos que sea indiferente minusculas y mayusculas
-        filter = { user: new RegExp(filterUser, "i") };
-    }
-    // Retornemos nuestros mensajes desde el modelo
-    return await Model.find(filter);
+
+    return new Promise((resolve, reject) => {
+        let filter = {};
+        if (filterUser !== null) {
+            // Con nuestra expresion regular hacemos que sea indiferente minusculas y mayusculas
+            filter = { user: new RegExp(filterUser, "i") };
+        }
+        // Retornemos nuestros mensajes desde el modelo
+        // Populamos la consulta para obtener la referencia 
+        Model.find(filter)
+            // Indicamos co que coleccion
+            .populate('user')
+            // Ejecutamos el populate
+            .exec()
+            // Si todo esta ok
+            .then((populated) => {
+                resolve(populated);
+            })
+            // Si ocurre un error
+            .catch((error) => {
+                reject(error);
+            });
+    });
+
 }
 
 async function updateMessage(id, message) {
