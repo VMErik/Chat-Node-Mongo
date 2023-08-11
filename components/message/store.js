@@ -7,7 +7,6 @@ const Model = require('./model')
 
 
 function addMessage(message) {
-    console.log("Añadimos desde el store");
     // Añadimos a nuestra base de datos, pasando a nuestra instancia el mensaje
     const myMessage = new Model(message);
     myMessage.save();

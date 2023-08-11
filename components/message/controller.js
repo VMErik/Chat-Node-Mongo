@@ -1,5 +1,6 @@
 // Se encarga de decidir todo lo que va a suceder
 require('dotenv').config();
+const { socket } = require('../../socket');
 const store = require('./store');
 
 
@@ -25,6 +26,9 @@ function addMessage(chat, user, message, file) {
             };
             // En caos de que todo este ok almacenamos y respondemos
             store.add(fullMessage);
+
+            // Enviamos por medio del scoket el mensaje
+            socket.io.emit('message', fullMessage);
 
             resolve(fullMessage);
         }
