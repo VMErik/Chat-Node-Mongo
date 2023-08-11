@@ -14,9 +14,10 @@ function addChat(users) {
 }
 
 
-function listChats() {
+function listChats(filter) {
+    console.log(filter)
     return new Promise((resolve, reject) => {
-        resolve(store.getChats())
+        resolve(store.getChats(filter))
     });
 }
 

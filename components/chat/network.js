@@ -11,7 +11,8 @@ const router = express.Router();
 
 
 router.get('/', (req, res) => {
-    controller.list()
+    const user = req.query.userId || null;
+    controller.list(user)
         .then((respuesta) => {
             response.success(req, res, respuesta, 200)
         })
@@ -19,6 +20,7 @@ router.get('/', (req, res) => {
             response.error(req, res, "Internal error", 500, error);
         });
 });
+
 
 
 

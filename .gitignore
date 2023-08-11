@@ -1,2 +1,7 @@
 node_modules
+uploads/*
+public/files/*
+# Variables de entorno
 .env
+# Lista de pendientes
+todo-list.txt

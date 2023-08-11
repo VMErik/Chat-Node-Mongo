@@ -13,14 +13,15 @@ function addMessage(message) {
     myMessage.save();
 }
 
-async function getMessages(filterUser) {
-
+async function getMessages(filterChat) {
+    console.log(filterChat);
     return new Promise((resolve, reject) => {
         let filter = {};
-        if (filterUser !== null) {
+        if (filterChat !== null) {
             // Con nuestra expresion regular hacemos que sea indiferente minusculas y mayusculas
-            filter = { user: new RegExp(filterUser, "i") };
+            filter = { chat: filterChat };
         }
+        console.log(filter);
         // Retornemos nuestros mensajes desde el modelo
         // Populamos la consulta para obtener la referencia 
         Model.find(filter)

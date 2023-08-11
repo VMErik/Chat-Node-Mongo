@@ -1,20 +1,27 @@
 // Se encarga de decidir todo lo que va a suceder
-
+require('dotenv').config();
 const store = require('./store');
 
 
-function addMessage(user, message) {
-    console.log(user, message);
+function addMessage(chat, user, message, file) {
     return new Promise((resolve, reject) => {
         if (!user || !message) {
             console.error('[messageController] No hay un usuario o mensaje')
             reject('Los datos son incorrectos');
         } else {
+
+            let fileUrl = '';
+            if (file) {
+                fileUrl = process.env.FILES_PATH + file.filename;
+            }
+
             // Agregamos valores que no queremos que mande el usuario
             const fullMessage = {
+                chat: chat,
                 user: user,
                 message: message,
                 date: new Date(),
+                file: fileUrl,
             };
             // En caos de que todo este ok almacenamos y respondemos
             store.add(fullMessage);
@@ -25,9 +32,9 @@ function addMessage(user, message) {
 }
 
 
-function getMessages(filterUser) {
+function getMessages(filterChat) {
     return new Promise((resolve, reject) => {
-        resolve(store.list(filterUser));
+        resolve(store.list(filterChat));
     });
 }
 

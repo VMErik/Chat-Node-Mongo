@@ -1,20 +1,30 @@
 // Se encarga de recibir la peticion http, procesar informacion y enviarla al controlador
 const express = require('express');
+// Para el manejo de archivos
+const multer = require('multer');
 // Importamos nuestro modulo de respuestas
 const response = require('../../network/response');
-
 // Importamos el controlador
 const controller = require('./controller')
-
-// Importamos router para trabajar con las rutas
+    // Importamos router para trabajar con las rutas
 const router = express.Router();
+
+// Preparamos nuestro multer
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, './public/files/')
+    },
+    filename: function(req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+const upload = multer({ storage: storage })
 
 // Indicamos nuestra ruta para el metodo get
 router.get('/', function(req, res) {
 
     // Obtenemos el usuario de los que queremos el mensaje
-    const filterMessages = req.query.user || null;
-
+    const filterMessages = req.query.chat || null;
     controller.getMessages(filterMessages)
         .then((messageList) => {
             response.success(req, res, messageList, 200);
@@ -24,10 +34,13 @@ router.get('/', function(req, res) {
         });
 });
 
+
 // Indicamos nuestra ruta para el metodo post
-router.post('/', function(req, res) {
-    // Llamamos a nuestro controladdor y pasamos lo que viene en el body
-    controller.addMessage(req.body.user, req.body.message)
+// Upload lo pasamos como middleware, que es  un paso antes que se ejecute nuestra funcion
+router.post('/', upload.single('file'), function(req, res) {
+
+    // Llamamos a nuestro controladdor y pasamos lo que viene en el body y el file que se adjunta
+    controller.addMessage(req.body.chat, req.body.user, req.body.message, req.file)
         .then((mensaje) => {
             response.success(req, res, mensaje, 201);
         })

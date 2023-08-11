@@ -7,6 +7,10 @@ const Schema = mongoose.Schema;
 // Declaramos nuestro esquema de Mongoose, propiedades y tipos
 const mySchema = new Schema({
     // Referenciamos a nuestro otro modelo
+    chat: {
+        type: Schema.ObjectId,
+        ref: 'Chat'
+    },
     user: {
         type: Schema.ObjectId,
         ref: 'User'
@@ -15,7 +19,8 @@ const mySchema = new Schema({
         type: String,
         required: true
     },
-    date: Date
+    date: Date,
+    file: String
 });
 
 
